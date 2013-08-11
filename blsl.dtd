@@ -1,0 +1,142 @@
+<!ENTITY % true '(t,T,true,1,yes)'>
+<!ENTITY % false '(f,F,false,0,no)'>
+<!ENTITY % null '(none,None,null,nil)'>
+<!ENTITY % dataTypes '(boolean|csv|email|empty|hexcolor|nonEmpty|number|re|safeHTML|text)'>
+<!ENTITY % fileFormats '(application/json|application/xml|text/html)'>
+<!ENTITY % XSLTFile '(CDATA|%null;)'>
+<!ENTITY % richML '(container*|access*|pageTitle+|style*|script*|widget*)'>
+
+<!ELEMENT view (condition*|param+|post?|set*|unset*|node*|output+) >
+<!ATTLIST view
+		xmlns				CDATA				#FIXED 'http://asyncode.com/View'
+		inherits		CDATA				#IMPLIED
+>
+
+<!ELEMENT condition (#PCDATA) >
+<!ATTLIST condition
+		name			ID							#REQUIRED
+		error			NMTOKEN					#REQUIRED
+		value			CDATA						#IMPLIED
+>
+
+<!ELEMENT post (param+) >
+
+<!ELEMENT param EMPTY >
+<!ATTLIST param
+		name			NMTOKEN					#REQUIRED
+		type			%dataTypes;			'text'
+		default		CDATA						#IMPLIED
+>
+
+<!ELEMENT set (%richML;)>
+<!ATTLIST set
+		name			NMTOKEN		#REQUIRED
+		path			CDATA			'$'
+		command		CDATA			'default'
+		default		CDATA			'null'
+		condition	CDATA			#IMPLIED
+		before		CDATA			#IMPLIED
+		after			CDATA			#IMPLIED
+>
+
+<!ELEMENT push (%richML;)>
+<!ATTLIST push
+		name			NMTOKEN		#REQUIRED
+		path			CDATA			'$'
+		command		CDATA			'default'
+		default		CDATA			'null'
+		condition	CDATA			#IMPLIED
+		before		CDATA			#IMPLIED
+		after			CDATA			#IMPLIED
+>
+
+<!ELEMENT unset EMPTY>
+<!ATTLIST unset
+		name			NMTOKEN			#REQUIRED
+		path			CDATA				'$'
+		command		CDATA				'default'
+		default		CDATA				'null'
+		condition	CDATA				#IMPLIED
+		before		CDATA			#IMPLIED
+		after			CDATA			#IMPLIED
+>
+
+<!ELEMENT node (%richML;)>
+<!ATTLIST node
+		name			NMTOKEN		#REQUIRED
+		command		CDATA			'default'
+		default		CDATA			'null'
+		condition	CDATA			#IMPLIED
+		before		CDATA			#IMPLIED
+		after			CDATA			#IMPLIED
+>
+
+<!ELEMENT output EMPTY>
+<!ATTLIST output
+		format						%fileFormats;			'application/xml'
+		XSLTFile					%XSLTFile;				'/xslt/index.xsl'
+		XSLTForceReload		(%true;,%false;)	#IMPLIED
+>
+
+<!-- RichML -->
+<!ENTITY % widgetTypes '(template,text,richText,menu,menuButton,img,image,form)'>
+<!ENTITY % containerWidths '(full,750,950,974,NMTOKENS)'>
+<!ENTITY % columnWidths '(half,third,quarter,fifth,sixth,twoThirds,threeQuarters,twoFifths,threeFifths,fourFifths,last,NMTOKENS)'>
+<!ENTITY % widgetTags '(widget*|before+|after+|access*|ANY)'>
+
+<!ELEMENT pageTitle (ml*|node*|#PCDATA)>
+
+<!ELEMENT style (#PCDATA)>
+
+<!ELEMENT script (#PCDATA)>
+
+<!ELEMENT access EMPTY>
+<!ATTLIST access
+		key CDATA	#REQUIRED
+>
+
+<!ELEMENT container (#PCDATA|widget*|container*|column*)>
+<!ATTLIST container
+		name 		ID									#REQUIRED
+		width		%containerWidths;		'full'
+		class		NMTOKENS						#IMPLIED
+>
+
+<!ELEMENT column (#PCDATA|widget*|container*)>
+<!ATTLIST column
+		name 		ID							#REQUIRED
+		width 	%columnWidths;	'last'
+>
+
+<!ELEMENT widget (template+|%widgetTags;)>
+<!ATTLIST widget
+		name						ID								#REQUIRED
+		type						%widgetTypes;			'template'
+		dataSource			IDREF							#IMPLIED
+		tag							NMTOKEN						'div'
+		subtag					NMTOKEN						'div'
+		class						NMTOKENS					#IMPLIED
+		subtagclass			NMTOKENS					#IMPLIED
+		mode						(tree)						'tree'
+		childName				NMTOKEN 					#IMPLIED
+		desc						CDATA							#IMPLIED
+		showEmpty				(true|false)			'true'
+>
+
+<!ELEMENT template (%widgetTags;)>
+
+<!ELEMENT node EMPTY>
+<!ATTLIST node
+		name				IDREF						#REQUIRED
+>
+
+<!ELEMENT ml EMPTY>
+<!ATTLIST ml
+		name				CDATA						#REQUIRED
+		node				CDATA						#IMPLIED
+>
+
+<!ELEMENT attr EMPTY>
+<!ATTLIST attr
+		name				CDATA						#REQUIRED
+>
